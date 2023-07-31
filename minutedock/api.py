@@ -61,7 +61,7 @@ class MinuteDockCall(object):
 
         if payload is not None:
             # remove none key-value pairs first.
-            request_payload = self.__remove_none_values(payload)
+            request_payload = self._remove_none_values(payload)
             # set content-type in header.
             request_headers["Content-Type"] = "application/json"
 
@@ -83,7 +83,7 @@ class MinuteDockCall(object):
             # If no error, return json response.
             return md_response.json()
 
-    def _get(self, cls, **kwargs) -> Union[object, list[object]]:
+    def get(self, cls, **kwargs) -> Union[object, list[object]]:
         """
         The function `_get` retrieves either a single MinuteDock object or a list of MinuteDock objects 
         based on the specified parameters.
@@ -103,7 +103,7 @@ class MinuteDockCall(object):
 
         return self._handle_response(cls, md_response)
 
-    def _post(self, cls, **kwargs) -> object:
+    def post(self, cls, **kwargs) -> object:
         """
         The function `_post` creates a single MinuteDock object based on the specified parameters.
 
@@ -126,7 +126,7 @@ class MinuteDockCall(object):
 
         return self._handle_response(cls, md_response)
 
-    def _put(self, cls, **kwargs) -> object:
+    def put(self, cls, **kwargs) -> object:
         """
         The function `_put` updates a single MinuteDock object based on the specified parameters.
 
@@ -164,7 +164,7 @@ class MinuteDockCall(object):
         """
         return cls._create_from_dict(response)
 
-    def __api_url(self, path: str, path_var: str = None, params: dict = None) -> str:
+    def _api_url(self, path: str, path_var: str = None, params: dict = None) -> str:
         if (path is not None):
             url_parts = urlparse(BASE_URL)
 
@@ -181,7 +181,7 @@ class MinuteDockCall(object):
         else:
             raise ClientException("path must not be None.")
 
-    def __remove_none_values(self, data: dict) -> str:
+    def _remove_none_values(self, data: dict) -> str:
         """
         The `_remove_none_values` function removes any key-value pairs with a value of None 
         from a given dictionary and returns the resulting dictionary as a JSON string.
@@ -249,7 +249,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a `Report` object.
         """
-        return self._post(
+        return self.post(
             cls=Report,
             path=API_PATH["reports"],
             params={
@@ -274,7 +274,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a list of User objects.
         """
-        return self._get(cls=User, path=API_PATH["users"], params={"active": active})
+        return self.get(cls=User, path=API_PATH["users"], params={"active": active})
 
     def get_current_user(self) -> User:
         """
@@ -283,7 +283,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a User object.
         """
-        return self._get(cls=User, path=API_PATH["current_user"])
+        return self.get(cls=User, path=API_PATH["current_user"])
 
     def get_accounts(self) -> list[Account]:
         """
@@ -292,7 +292,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             A list of Account objects.
         """
-        return self._get(cls=Account, path=API_PATH["accounts"])
+        return self.get(cls=Account, path=API_PATH["accounts"])
 
     def get_current_account(self) -> Account:
         """
@@ -301,7 +301,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             an Account object.
         """
-        return self._get(cls=Account, path=API_PATH["current_account"])
+        return self.get(cls=Account, path=API_PATH["current_account"])
 
     def get_contact(self, id: int) -> Contact:
         """
@@ -310,7 +310,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a contact object
         """
-        return self._get(cls=Contact, path_var=id, path=API_PATH["contacts"])
+        return self.get(cls=Contact, path_var=id, path=API_PATH["contacts"])
 
     def get_all_contacts(self, pinned: bool = False, active: bool = True) -> Contact:
         """
@@ -319,7 +319,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a contact object
         """
-        return self._get(
+        return self.get(
             cls=Contact,
             path=API_PATH["contacts"],
             params={
@@ -347,7 +347,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a contact object.
         """
-        return self._post(
+        return self.post(
             cls=Contact,
             path=API_PATH["contacts"],
             params={
@@ -383,7 +383,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a contact object with updated attributes.
         """
-        return self._put(
+        return self.put(
             cls=Contact,
             path_var=id,
             path=API_PATH["contacts"],
@@ -408,7 +408,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a project object
         """
-        return self._get(cls=Project, path_var=id, path=API_PATH["projects"])
+        return self.get(cls=Project, path_var=id, path=API_PATH["projects"])
 
     def get_all_projects(self, pinned: bool = False, active: bool = True) -> Project:
         """
@@ -417,7 +417,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a project object
         """
-        return self._get(
+        return self.get(
             cls=Project,
             path=API_PATH["projects"],
             params={
@@ -448,7 +448,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a project object.
         """
-        return self._post(
+        return self.post(
             cls=Project,
             path=API_PATH["projects"],
             params={
@@ -490,7 +490,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a project object with updated attributes.
         """
-        return self._put(
+        return self.put(
             cls=Project,
             path_var=id,
             path=API_PATH["projects"],
@@ -518,7 +518,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a Task object 
         """
-        return self._get(cls=Task, id=id, path=API_PATH["tasks"])
+        return self.get(cls=Task, id=id, path=API_PATH["tasks"])
 
     def get_all_tasks(self, pinned: bool = None, active: bool = True) -> list[Task]:
         """
@@ -527,7 +527,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a list of Task objects
         """
-        return self._get(
+        return self.get(
             cls=Task,
             path=API_PATH["tasks"],
             params={
@@ -558,7 +558,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a task object.
         """
-        return self._post(
+        return self.post(
             cls=Task,
             path=API_PATH["tasks"],
             params={
@@ -600,7 +600,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
             a task object with updated attributes.
         """
-        return self._put(
+        return self.put(
             cls=Task,
             path_var=id,
             path=API_PATH["tasks"],
@@ -628,7 +628,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a `TimeEntry` object.
         """
-        return self._post(cls=TimeEntry, path_var="start", path=API_PATH["current_entry"])
+        return self.post(cls=TimeEntry, path_var="start", path=API_PATH["current_entry"])
 
     def pause_timer(self) -> TimeEntry:
         """
@@ -637,7 +637,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a `TimeEntry` object.
         """
-        return self._post(cls=TimeEntry, path_var="pause", path=API_PATH["current_entry"])
+        return self.post(cls=TimeEntry, path_var="pause", path=API_PATH["current_entry"])
 
     def log_timer(self) -> TimeEntry:
         """
@@ -646,7 +646,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a `TimeEntry` object.
         """
-        return self._post(cls=TimeEntry, path_var="log", path=API_PATH["current_entry"])
+        return self.post(cls=TimeEntry, path_var="log", path=API_PATH["current_entry"])
 
     def search_time_entries(
         self,
@@ -672,7 +672,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a list of `TimeEntry` objects.
         """
-        return self._get(
+        return self.get(
             cls=TimeEntry,
             path=API_PATH["entries"],
             params={
@@ -710,7 +710,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a TimeEntry object.
         """
-        return self._post(
+        return self.post(
             cls=TimeEntry,
             path=API_PATH["entries"],
             payload={
@@ -744,7 +744,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a TimeEntry object.
         """
-        return self._put(
+        return self.put(
             cls=TimeEntry,
             path_var=id,
             path=API_PATH["entries"],
@@ -768,7 +768,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a Dock object.
         """
-        return self._get(cls=Dock, path=API_PATH["dock"])
+        return self.get(cls=Dock, path=API_PATH["dock"])
 
     def update_dock(
         self,
@@ -787,7 +787,7 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a Dock object.
         """
-        return self._get(
+        return self.get(
             cls=Dock,
             path=API_PATH["dock"],
             payload={

@@ -761,5 +761,31 @@ class MinuteDock(MinuteDockCall):
             }
         )
 
+    def get_dock(self):
+        """
+        The `get_dock` function returns the current entry in the Dock.
 
+        Returns:
+          a Dock object.
+        """
+        return self._get(cls=Dock, path=API_PATH["dock"])
+
+    def update_dock(
+        self,
+        id: int = None,
+        account_id: int = None,
+        description: str = None,
+        duration: int = None,
+        contact_id: int = None,
+        project_id: int = None,
+        task_ids: list[int] = None,
+        timer_active: bool = None
+    ) -> Dock:
+        """
+        The `update_dock` function updates the dock with the specified parameters.
+
+        Returns:
+          a Dock object.
+        """
+    
 __all__ = ["MinuteDock"]

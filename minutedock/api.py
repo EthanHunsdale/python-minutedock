@@ -787,5 +787,20 @@ class MinuteDock(MinuteDockCall):
         Returns:
           a Dock object.
         """
-    
+        return self._get(
+            cls=Dock,
+            path=API_PATH["dock"],
+            payload={
+                "id":           id,
+                "account_id":   account_id,
+                "description":  description,
+                "duration":     duration,
+                "contact_id":   contact_id,
+                "project_id":   project_id,
+                "task_ids":     task_ids,
+                "timer_active": timer_active
+            }
+        )
+
+
 __all__ = ["MinuteDock"]
